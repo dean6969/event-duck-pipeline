@@ -87,7 +87,7 @@ Password: airflow
     - Open the Airflow web UI at: <http://localhost:8080>
     - Locate the DAG **etl_duckdb**
     - Switch it **On**, then click **Trigger DAG** to run the pipeline
-    - The pipeline executes the flow: **staging → silver → gold → data mart**
+    - The pipeline executes the flow: **staging → silver → gold**
     - Monitor DAG runs via the Graph or Tree view
 2. **Data Validation**
 
