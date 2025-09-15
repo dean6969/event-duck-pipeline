@@ -14,15 +14,45 @@ The goal is to enable analysis such as:
 
 **Folder Structure**
 
-- dags/: Contains the Airflow DAG (etl_duckdb.py) for orchestrating the pipeline.
-- sql/staging/: SQL scripts to parse raw JSON into staging tables (tagloads, impressions, clicks).
-- sql/silver/: SQL scripts to build fact and dimension tables.
-- sql/gold/: SQL scripts to build analysis-ready marts (traffic, impressions, clicks, fill rate, reach).
-- data/raw/: Partitioned raw JSON event files.
-- data/dims/: Dimension CSVs (dim_products.csv, dim_campaigns.csv).
-- result.ipynb: Jupyter Notebook to validate results from the gold layer.
-- setup_pipeline.sh: Script to bootstrap Docker containers and Airflow environment.
-- remove_pipeline.sh: Script to clean up resources.
+```text
+event-duck-pipeline/
+│
+├── dags/                  # Airflow DAGs
+│   └── etl_duckdb.py
+│
+├── sql/
+│   ├── staging/           # Parse raw JSON into staging tables
+│   │   ├── staging_tagloads_mounts.sql
+│   │   ├── staging_impressions.sql
+│   │   └── staging_clicks.sql
+│   │
+│   ├── silver/            # Build fact & dimension tables
+│   │   ├── dim_articles.sql
+│   │   ├── dim_camp.sql
+│   │   ├── dim_date.sql
+│   │   ├── dim_device.sql
+│   │   ├── dim_prod.sql
+│   │   ├── fct_event_articles.sql
+│   │   ├── fct_event_impression.sql
+│   │   └── fct_product_click.sql
+│   │
+│   └── gold/              # Analysis-ready marts
+│       ├── m_article_traffic.sql
+│       ├── m_campaign_impressions.sql
+│       ├── m_domain_fill_rate.sql
+│       ├── m_product_clicks_weekly.sql
+│       └── m_user_reach.sql
+│
+├── data/
+│   ├── raw/               # Partitioned raw JSON event files
+│   └── dims/              # Dimension CSVs (dim_products.csv, dim_campaigns.csv)
+│
+├── result.ipynb           # Notebook to validate results from gold layer
+├── setup_pipeline.sh      # Script to bootstrap Docker & Airflow
+└── remove_pipeline.sh     # Script to clean up resources
+
+```
+
 
 **Getting Started**
 
@@ -37,8 +67,9 @@ The goal is to enable analysis such as:
 1. **Environment Setup**
 
 Run the provided shell script to set up the environment:
-
+```bash
 ./setup_pipeline.sh
+```
 
 This will:
 
@@ -87,6 +118,7 @@ The **Gold Layer** aggregates data into marts (m_article_traffic, m_product_clic
 When finished, remove all resources with:
 ```bash
 ./remove_pipeline.sh
+```
 
 This stops and removes Docker containers, networks, and volumes created for the project.
 
