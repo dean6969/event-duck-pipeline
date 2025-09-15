@@ -1,6 +1,6 @@
 # Event Duck Pipeline
 
-## Introduction*
+## Introduction
 
 This project demonstrates a data engineering pipeline that parses raw JSON event data, enriches it with product and campaign dimensions, and transforms it into analysis-ready tables. The pipeline is orchestrated by **Apache Airflow** and uses **DuckDB** as the transformation engine.
 
