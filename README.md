@@ -73,7 +73,7 @@ Run the provided shell script to set up the environment:
 
 This will:
 
-- - Start **Airflow 3.0** inside Docker
+- Start **Airflow 3.0** inside Docker
     - Initialize a **DuckDB** warehouse file (for transformations)
     - Register and deploy the ETL DAG etl_duckdb into Airflow
 
@@ -95,6 +95,8 @@ After the pipeline runs successfully:
     - Run the notebook cells to validate the Gold layer queries
 
 **Data Architecture**
+
+![Star Schema Architecture](assets/data modelling.png)
 
 The project uses a **Star Schema** with 3 fact tables and 5 dimensions.
 
