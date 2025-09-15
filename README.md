@@ -22,9 +22,8 @@ event-duck-pipeline/
 │
 ├── sql/
 │   ├── staging/           # Parse raw JSON into staging tables
-│   │   ├── staging_tagloads_mounts.sql
-│   │   ├── staging_impressions.sql
-│   │   └── staging_clicks.sql
+│   │   ├── stg_v_context.sql
+│   │   
 │   │
 │   ├── silver/            # Build fact & dimension tables
 │   │   ├── dim_articles.sql
