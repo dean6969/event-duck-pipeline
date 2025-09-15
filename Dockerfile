@@ -1,4 +1,4 @@
-FROM apache/airflow:3.0.6
+FROM apache/airflow:2.9.2
 
 # Cài provider Postgres
 RUN pip install --no-cache-dir apache-airflow-providers-postgres
