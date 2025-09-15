@@ -47,7 +47,9 @@ event-duck-pipeline/
 │   ├── raw/               # Partitioned raw JSON event files
 │   └── dims/              # Dimension CSVs (dim_products.csv, dim_campaigns.csv)
 │
-├── result.ipynb           # Notebook to validate results from gold layer
+├── docker-compose.yml 
+├── Dockerfile
+├── result.ipynb         # Notebook to validate results from gold layer
 ├── setup_pipeline.sh      # Script to bootstrap Docker & Airflow
 └── remove_pipeline.sh     # Script to clean up resources
 
