@@ -17,6 +17,8 @@ db/*.db.wal
 
 data/logs/etl_log.csv/
 
+.env/
+
 
 
 
