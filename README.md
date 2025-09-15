@@ -76,7 +76,7 @@ Run the provided shell script to set up the environment:
 This will:
 
 - Start **Airflow 3.0** inside Docker
-    - Initialize a **DuckDB** warehouse file (for transformations)
+    - Initialize a Airflow needed to wait around 5-10 min until container created
     - Register and deploy the ETL DAG etl_duckdb into Airflow
 
 Default Airflow credentials:  
@@ -124,7 +124,7 @@ When finished, remove all resources with:
 ./remove_pipeline.sh
 ```
 
-This stops and removes Docker containers, networks, and volumes created for the project.
+This stops and removes Docker containers, networks, images and volumes created for the project.
 
 **Known Limitations & Improvements**
 
