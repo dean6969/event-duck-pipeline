@@ -75,7 +75,7 @@ Run the provided shell script to set up the environment:
 
 This will:
 
-- Start **Airflow 3.0** inside Docker
+- Start **Airflow 2.9** inside Docker
     - Initialize a Airflow needed to wait around 5-10 min until container created
     - Register and deploy the ETL DAG etl_duckdb into Airflow
 
