@@ -96,7 +96,7 @@ After the pipeline runs successfully:
 
 **Data Architecture**
 
-![Star Schema Architecture](assets/data modelling.png)
+![Star Schema Architecture](assets/data_modelling.png)
 
 The project uses a **Star Schema** with 3 fact tables and 5 dimensions.
 
