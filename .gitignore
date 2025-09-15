@@ -1,0 +1,22 @@
+# Python
+
+
+# Airflow
+
+logs/
+dags/__pycache__/
+config/
+scripts/__pycache__/
+
+db/*.db
+db/*.db.wal
+
+# DuckDB
+*.db
+*.db.wal
+
+data/logs/etl_log.csv/
+
+
+
+
