@@ -1,64 +1,100 @@
 # Event Duck Pipeline
 
-## 1. Overview
-This project demonstrates a data engineering pipeline that:
-- Parses raw JSON event data.
-- Enriches events with product and campaign dimensional data.
-- Transforms data into analysis-ready tables for reporting and insights.
+## Introduction*
 
-**Tech Stack**:
-- [Apache Airflow](https://airflow.apache.org/) – Orchestration & scheduling.
-- [DuckDB](https://duckdb.org/) – In-process OLAP database for fast SQL analytics.
-- Python – Parsing & transformations.
+This project demonstrates a data engineering pipeline that parses raw JSON event data, enriches it with product and campaign dimensions, and transforms it into analysis-ready tables. The pipeline is orchestrated by **Apache Airflow** and uses **DuckDB** as the transformation engine.
 
----
+The goal is to enable analysis such as:
 
-## 2. Data Sources
-- **Raw Event Data** (`.json`, partitioned by date).
-- **dim_products.csv** – Product attributes & metadata.
-- **dim_campaigns.csv** – Campaign metadata (CPC, CPA, CPM rates, validity, etc.).
+- Top articles by traffic per domain
+- Top clicked products per brand in the last week
+- Most impressed product per campaign
+- Fill rate (mounts/tagloads) per domain
+- Total unique users reached
 
----
+**Folder Structure**
 
-## 3. Data Modeling
-The following analysis-ready tables are created:
-- **traffic_per_domain** – Measures article traffic by tagloads.
-- **impressions_per_campaign** – Aggregates product impressions by campaign.
-- **clicks_per_brand** – Tracks clicked products by brand and time.
+- dags/: Contains the Airflow DAG (etl_duckdb.py) for orchestrating the pipeline.
+- sql/staging/: SQL scripts to parse raw JSON into staging tables (tagloads, impressions, clicks).
+- sql/silver/: SQL scripts to build fact and dimension tables.
+- sql/gold/: SQL scripts to build analysis-ready marts (traffic, impressions, clicks, fill rate, reach).
+- data/raw/: Partitioned raw JSON event files.
+- data/dims/: Dimension CSVs (dim_products.csv, dim_campaigns.csv).
+- result.ipynb: Jupyter Notebook to validate results from the gold layer.
+- setup_pipeline.sh: Script to bootstrap Docker containers and Airflow environment.
+- remove_pipeline.sh: Script to clean up resources.
 
-Each table is derived from raw events joined with dimensions for enrichment.
+**Getting Started**
 
----
+**Prerequisites**
 
-## 4. Pipeline Workflow
-Airflow DAG orchestrates the following steps:
-1. **Ingest** raw JSON and dimension CSVs into DuckDB staging.
-2. **Transform** JSON events → structured tables (`events`).
-3. **Enrich** with `dim_products` and `dim_campaigns`.
-4. **Aggregate** into analysis-ready tables (`traffic`, `impressions`, `clicks`).
-5. **Run SQL Queries** to answer analysis questions.
+- Docker Deskstop & Docker Compose installed
+- Python 3.x installed (for Jupyter Notebook)
+- Unix-like shell (Linux/macOS or WSL for Windows)
 
----
+**Setup and Deployment**
 
-## 5. Error Handling & Scalability
-- Airflow retry policies for failed tasks.
-- Modular SQL scripts for maintainability.
-- Logging of transformations and row counts.
+1. **Environment Setup**
 
----
+Run the provided shell script to set up the environment:
 
-## 6. Analysis Questions
-This pipeline enables answering:
-1. Top 5 articles by traffic per domain.
-2. Top 3 clicked products per brand (last week).
-3. Product with most impressions per campaign.
-4. Mount rate (mounts/tagloads) per domain.
-5. Number of unique users advertised to.
+./setup_pipeline.sh
 
----
+This will:
 
-## 7. Setup & Execution
+- - Start **Airflow 3.0** inside Docker
+    - Initialize a **DuckDB** warehouse file (for transformations)
+    - Register and deploy the ETL DAG etl_duckdb into Airflow
 
-### Requirements
+Default Airflow credentials:  
+Username: airflow  
+Password: airflow
+
+1. **Airflow Access**
+    - Open the Airflow web UI at: <http://localhost:8080>
+    - Locate the DAG **etl_duckdb**
+    - Switch it **On**, then click **Trigger DAG** to run the pipeline
+    - The pipeline executes the flow: **staging → silver → gold → data mart**
+    - Monitor DAG runs via the Graph or Tree view
+2. **Data Validation**
+
+After the pipeline runs successfully:
+
+- - Open **result.ipynb**
+    - Run the notebook cells to validate the Gold layer queries
+
+**Data Architecture**
+
+The project uses a **Star Schema** with 3 fact tables and 5 dimensions.
+
+- **Fact tables**:
+  - fct_event_articles (TagLoads & Mounts)
+  - fct_event_impression (Product Impressions)
+  - fct_product_click (Product Clicks)
+- **Dimension tables**:
+  - dim_articles
+  - dim_camp
+  - dim_date
+  - dim_device
+  - dim_prod
+
+The **Gold Layer** aggregates data into marts (m_article_traffic, m_product_clicks_weekly, m_campaign_impressions, m_domain_fill_rate, m_user_reach) to directly answer analysis questions.
+
+
+
+**Remove Resources**
+
+When finished, remove all resources with:
 ```bash
-pip install -r requirements.txt  # event-duck-pipeline
+./remove_pipeline.sh
+
+This stops and removes Docker containers, networks, and volumes created for the project.
+
+**Known Limitations & Improvements**
+
+- **DuckDB limitation**: Cannot handle concurrent writes, so not suitable for heavy production workloads. Works fine for this demo.
+- **Possible improvements**:
+  - Incremental loads & idempotent DAG runs
+  - Stronger validation (e.g. Great Expectations, dbt tests)
+  - Cloud data warehouse migration (Snowflake/BigQuery/Redshift) for scalability
+  - Add monitoring and alerting for better observability
