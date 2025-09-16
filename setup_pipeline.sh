@@ -28,5 +28,5 @@ elif command -v open &> /dev/null; then
 elif command -v start &> /dev/null; then
     start "$URL"
 else
-    echo "🌐 Vui lòng mở thủ công: $URL"
+    echo "🌐 Please manually open: $URL"
 fi
