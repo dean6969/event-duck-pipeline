@@ -85,7 +85,7 @@ Password: airflow
 1. **Airflow Access**
     - Open the Airflow web UI at: <http://localhost:8080>
     - Locate the DAG **etl_duckdb**
-    - Switch it **On**, then click **Trigger DAG** to run the pipeline
+    - Switch it **On**, then click **Trigger DAG** to run the pipeline, the pipeline run around 4-5 minutes based on the thread setup of your docker for 31 files parquet describing for 31 days event, so if running 1 single day should be around 15-25s per pipelines 
     - The pipeline executes the flow: **staging → silver → gold**
     - Monitor DAG runs via the Graph or Tree view
 2. **Data Validation**
