@@ -5,8 +5,8 @@ DB_PATH = "/opt/airflow/db/event_prod.db"
 
 def run_sql_file( file_path: str, **kwargs):
     """
-    Đọc file SQL, format với kwargs (ví dụ: data='data/*.parquet'),
-    sau đó execute trên connection DuckDB.
+    read SQL files, kwargs (ex: data='data/*.parquet'),
+    Then execute on Duckdb.
     """
 
     con = duckdb.connect(DB_PATH)
