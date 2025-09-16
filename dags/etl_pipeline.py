@@ -14,7 +14,7 @@ with DAG(
     start_date=datetime(2025, 1, 1),
     schedule="@daily",
     catchup=False,
-    max_active_runs=1,  # tránh 2 run cùng lúc giữ lock DB
+    max_active_runs=1,  # prevent active run
     tags=["duckdb", "etl"],
 ) as dag:
     
@@ -38,12 +38,12 @@ with DAG(
 
         return new_files
 
-    # ---------------- GATE (SKIP nếu không có file mới) ----------------
+    # ---------------- GATE (Skip if have new file) ----------------
     @task.short_circuit(task_id="has_new_files")
     def has_new_files(files: list[str]) -> bool:
         return bool(files)
 
-    # ---------------- STAGING (LOOP TUẦN TỰ) ----------------
+    # ---------------- STAGING (LOOP) ----------------
     @task_group(group_id="staging")
     def staging_tasks(files):
         @task(task_id="stg_v_context_loop")
@@ -62,11 +62,11 @@ with DAG(
                     print(f"files {fpath} has been loaded")
                     log_status(os.path.basename(fpath), status="success")
                 except Exception as e:
-                    # log failed nhưng vẫn cố gắng xử lý các file còn lại
+                    # log failed 
                     log_status(os.path.basename(fpath), status="failed")
                     errors.append(f"{os.path.basename(fpath)}: {e}")
             if errors:
-                # Fail task sau khi đã thử hết các file
+                # Fail task 
                 raise Exception("Staging failed for some files:\n" + "\n".join(errors))
 
         stg_v_context_loop(files)
